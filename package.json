@@ -4,7 +4,10 @@
 	"description": "A Discord bot for reaction-based role assignment.",
 	"main": "dist/reaction.js",
 	"author": "Carter Himmel <sycerdev@gmail.com>",
-	"contributors": [ "iCrawl", "1Computer1" ],
+	"contributors": [
+		"iCrawl",
+		"1Computer1"
+	],
 	"license": "Apache 2.0",
 	"scripts": {
 		"build": "gulp",
@@ -15,6 +18,8 @@
 		"common-tags": "^1.8.0",
 		"discord-akairo": "github:discord-akairo/discord-akairo",
 		"discord.js": "github:sycer-dev/discord.js",
+		"moment": "^2.24.0",
+		"moment-duration-format": "^2.3.2",
 		"mongoose": "^5.5.12",
 		"node-emoji": "^1.10.0",
 		"node-superfetch": "^0.1.9",
@@ -23,6 +28,7 @@
 	"devDependencies": {
 		"@types/common-tags": "^1.8.0",
 		"@types/dotenv": "^6.1.1",
+		"@types/moment-duration-format": "^2.2.2",
 		"@types/mongoose": "^5.5.3",
 		"@types/node": "^12.0.4",
 		"@types/node-emoji": "^1.8.1",
