@@ -1,0 +1,40 @@
+{
+	"name": "sms",
+	"version": "0.0.1",
+	"description": "A Discord bot for reaction-based role assignment.",
+	"main": "dist/reaction.js",
+	"author": "Carter Himmel <sycerdev@gmail.com>",
+	"contributors": [ "iCrawl", "1Computer1" ],
+	"license": "Apache 2.0",
+	"scripts": {
+		"build": "gulp",
+		"test": "eslint src --ext .ts",
+		"start": "node ."
+	},
+	"dependencies": {
+		"common-tags": "^1.8.0",
+		"discord-akairo": "github:discord-akairo/discord-akairo",
+		"discord.js": "github:sycer-dev/discord.js",
+		"mongoose": "^5.5.12",
+		"node-emoji": "^1.10.0",
+		"node-superfetch": "^0.1.9",
+		"winston": "^3.2.1"
+	},
+	"devDependencies": {
+		"@types/common-tags": "^1.8.0",
+		"@types/dotenv": "^6.1.1",
+		"@types/mongoose": "^5.5.3",
+		"@types/node": "^12.0.4",
+		"@types/node-emoji": "^1.8.1",
+		"@types/ws": "^6.0.1",
+		"@typescript-eslint/eslint-plugin": "^1.9.0",
+		"@typescript-eslint/parser": "^1.9.0",
+		"dotenv": "^8.0.0",
+		"fs-nextra": "^0.4.5",
+		"gulp": "^4.0.2",
+		"gulp-sourcemaps": "^2.6.5",
+		"gulp-typescript": "^5.0.1",
+		"merge2": "^1.2.3",
+		"typescript": "^3.5.1"
+	}
+}
