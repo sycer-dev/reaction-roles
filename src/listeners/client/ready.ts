@@ -40,7 +40,7 @@ export default class ReadyListener extends Listener {
 		const statuses = this.infinite(activities);
 
 		setInterval(() => {
-			const status = statuses.next();
+			const status = statuses.next() as IteratorResult<ReactionStatus>;
 			this.client.user!.setActivity(status.value.text, { type: status.value.type });
 		}, 300000);
 
