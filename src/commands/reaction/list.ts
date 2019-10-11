@@ -1,7 +1,7 @@
 import { Command } from 'discord-akairo';
 import { Message } from 'discord.js';
 import { Reaction } from '../../models/Reaction';
-import { stripIndents } from 'common-tags';
+import { stripIndents, oneLine } from 'common-tags';
 
 export default class ListCommand extends Command {
 	public constructor() {
@@ -24,20 +24,13 @@ export default class ListCommand extends Command {
 		const embed = this.client.util.embed()
 			.setColor(this.client.config.color)
 			.setTitle('Live Reaction Roles')
-		let i = 1;
-
-		for (const o of reactions.values()) {
-			if (embed.fields.length > 25) continue;
-			const emoji = o.emojiType === 'custom' ? this.client.emojis.get(o.emoji) : o.emoji;
-			const role = await msg.guild!.roles.fetch(o.roleID);
-			embed.addField(`Reaction Role #${i}`, stripIndents`
-				**Message ID**: \`${o.messageID}\`
-				**Channel**: ${this.client.channels.get(o.channelID)} \`[${this.client.channels.get(o.channelID)!.id}]\`
-				**Emoji**: ${emoji}
-				**Role**: ${role ? role : '@deleted role'} \`[${role ? role.id : '????'}]\`
-			`, true);
-			i++;
-		}
+			.setDescription(reactions.map(r => {
+				const emoji = r.emojiType === 'custom' ? this.client.emojis.get(r.emoji) : r.emoji;
+				return oneLine`[\`${r.id}\`] ${emoji}
+					${this.client.channels.get(r.channelID) || '#deleted-channel'} 
+					${msg.guild!.roles.get(r.roleID) || '@deleted-role'}
+				`
+			}).join('\n').substring(0, 2000));
 
 		return msg.util!.reply({ embed });
 

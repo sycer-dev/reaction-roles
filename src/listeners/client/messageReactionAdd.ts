@@ -40,8 +40,7 @@ export default class ReactionAddListener extends Listener {
 		}
 
 		// fetch the role store because it may be uncached
-		const roles = await msg.guild.roles.fetch();
-		const role = roles.get(rr.roleID);
+		const role = msg.guild.roles.get(rr.roleID);
 		if (!role) {
 			return this.queue.delete(key);
 		}
@@ -56,7 +55,7 @@ export default class ReactionAddListener extends Listener {
 			return this.queue.delete(key);
 		}
 
-		const member = await msg.guild.members.fetch(user);
+		const member = await msg.guild.members.fetch(user).catch(() => {});
 		if (!member) {
 			return this.queue.delete(key);
 		}

@@ -112,7 +112,7 @@ export default class AddReactionCommand extends Command {
 			match: 'rest',
 			prompt: {
 				start: 'What role would you like to apply when they react?',
-				retry: 'Please provide a valid emoji.'
+				retry: 'Please provide a valid role.'
 			}
 		};
 
