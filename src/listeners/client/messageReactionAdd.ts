@@ -14,7 +14,7 @@ export default class ReactionAddListener extends Listener {
 		this.queue = new Set();
 	}
 
-	public async exec(reaction: MessageReaction, user: User): Promise<boolean | undefined> {
+	public async exec(reaction: MessageReaction, user: User): Promise<boolean | void> {
 		const msg = reaction.message;
 		if (msg.partial) await msg.fetch();
 

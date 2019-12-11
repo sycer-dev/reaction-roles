@@ -2,7 +2,7 @@ import { Listener, Command } from 'discord-akairo';
 import { Message, User, TextChannel } from 'discord.js';
 
 const MISSING = {
-	'notOwner': 'this command is reserved for the server owner!',
+	notOwner: 'this command is reserved for the server owner!',
 } as { [key: string]: string };
 
 export default class MissingPermissionsListener extends Listener {
@@ -14,8 +14,7 @@ export default class MissingPermissionsListener extends Listener {
 		});
 	}
 
-	public exec(msg: Message, _: Command, type: any, missing: any): undefined | Promise<Message | Message[] | void> {
-
+	public exec(msg: Message, _: Command, type: any, missing: any): void | Promise<Message | void> {
 		if (Object.keys(missing).includes(missing)) return msg.util!.reply(MISSING[missing]);
  
 		let text;

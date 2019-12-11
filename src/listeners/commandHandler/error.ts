@@ -10,10 +10,10 @@ export default class ErrorHandler extends Listener {
 		});
 	}
 
-	public exec(err: Error, msg: Message): undefined | Promise<Message | Message[]> {
+	public exec(err: Error, msg: Message): void {
 		this.client.logger.error(`[COMMAND ERROR] ${err} ${err.stack}`);
 		if (msg.guild && msg.channel instanceof TextChannel && msg.channel!.permissionsFor(this.client.user!)!.has('SEND_MESSAGES')) {
-			return msg.channel.send([
+			msg.channel.send([
 				'Looks like an error occured.',
 				'```js',
 				`${err}`,

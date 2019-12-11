@@ -24,7 +24,7 @@ export default class ReadyListener extends Listener {
 				type: 'WATCHING'
 			},
 			{
-				text: 'https://discord.sycer.dev/ 🔗',
+				text: 'https://sycer.dev/ 🔗',
 				type: 'WATCHING'
 			},
 			{
@@ -32,7 +32,7 @@ export default class ReadyListener extends Listener {
 				type: 'PLAYING'
 			},
 			{
-				text: `${this.client.guilds.size} Guilds 🛡`,
+				text: `${this.client.guilds.size.toLocaleString('en-US')} Guilds 🛡`,
 				type: 'WATCHING'
 			}
 		];
