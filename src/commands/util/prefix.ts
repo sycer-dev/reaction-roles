@@ -29,7 +29,7 @@ export default class PrefixCommand extends Command {
 
 	public async exec(msg: Message, { prefix }: { prefix: string }): Promise<Message | Message[]> {
 		if (!prefix) {
-			const prefix = this.client.settings!.guild.get(this.client.user!.id)!.prefix;
+			const prefix = this.client.settings!.guild.get(msg.guild.id)!.prefix;
 			return msg.util!.reply(`the current prefix is \`${prefix}\`.`);
 		}
 
