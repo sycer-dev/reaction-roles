@@ -7,14 +7,13 @@ export default class VoteCommand extends Command {
 			aliases: ['vote', 'premium'],
 			clientPermissions: ['SEND_MESSAGES'],
 			description: {
-				content: 'Gives information about where you can recieve premium beneifts.'
+				content: 'Gives information about where you can recieve premium beneifts.',
 			},
-			category: 'Utilities'
+			category: 'Utilities',
 		});
 	}
 
-	public async exec(msg: Message): Promise<Message | Message[]> {
-		return msg.util!.reply('Soon™.');
+	public async exec(msg: Message): Promise<Message | Message[] | void> {
+		return msg.util?.reply('Soon™.');
 	}
 }
-

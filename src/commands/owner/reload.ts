@@ -1,5 +1,3 @@
-// credit to 1Computer1/hoshi
-
 import { Command, Inhibitor, Listener } from 'discord-akairo';
 import { Message } from 'discord.js';
 
@@ -11,48 +9,57 @@ export default class ReloadCommand extends Command {
 			ownerOnly: true,
 			description: {
 				content: 'Reloads a module.',
-				usage: '<module> [type:]'
-			}
+				usage: '<module> [type:]',
+			},
 		});
 	}
 
-	public *args(): object {
+	public *args() {
 		const type = yield {
-			'match': 'option',
-			'flag': ['type:'],
-			'type': [['command', 'c'], ['inhibitor', 'i'], ['listener', 'l']],
-			'default': 'command'
+			match: 'option',
+			flag: ['type:'],
+			type: [
+				['command', 'c'],
+				['inhibitor', 'i'],
+				['listener', 'l'],
+			],
+			default: 'command',
 		};
 
 		const mod = yield {
 			type: (msg: Message, phrase: string) => {
 				if (!phrase) return null;
-				// @ts-ignore
-				const resolver = this.handler.resolver.type({
+
+				const types: { [key: string]: string } = {
 					command: 'commandAlias',
 					inhibitor: 'inhibitor',
-					listener: 'listener'
-				}[type]);
+					listener: 'listener',
+				};
+
+				const resolver = this.handler.resolver.type(types[type]!);
 
 				return resolver(msg, phrase);
-			}
+			},
 		};
 
 		return { type, mod };
 	}
 
-	public exec(msg: Message, { type, mod }: { type: any; mod: Command | Inhibitor | Listener }): Promise<Message | Message[]> {
+	public async exec(
+		msg: Message,
+		{ type, mod }: { type: any; mod: Command | Inhibitor | Listener },
+	): Promise<Message | Message[] | void> {
 		if (!mod) {
-			return msg.util!.reply(`Invalid ${type} ${type === 'command' ? 'alias' : 'ID'} specified to reload.`);
+			return msg.util?.reply(`Invalid ${type} ${type === 'command' ? 'alias' : 'ID'} specified to reload.`);
 		}
 
 		try {
 			mod.reload();
-			return msg.util!.reply(`Sucessfully reloaded ${type} \`${mod.id}\`.`);
+			return msg.util?.reply(`Sucessfully reloaded ${type} \`${mod.id}\`.`);
 		} catch (err) {
 			this.client.logger.error(`Error occured reloading ${type} ${mod.id}`);
 			this.client.logger.error(err);
-			return msg.util!.reply(`Failed to reload ${type} \`${mod.id}\`.`);
+			return msg.util?.reply(`Failed to reload ${type} \`${mod.id}\`.`);
 		}
 	}
 }

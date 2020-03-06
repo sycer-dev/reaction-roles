@@ -7,15 +7,20 @@ import { Logger } from 'winston';
 
 let i = 0;
 
-export interface Models { [key: string]: Model<any> };
+export interface Models {
+	[key: string]: Model<any>;
+}
 export type Types = 'guild' | 'reaction';
 export type ModelTypes = Guild | Reaction;
 
 const MODELS: Models = {
 	guild: GuildModel,
-	reaction: ReactionModel
+	reaction: ReactionModel,
 };
 
+/**
+ * The Settings Provider that handles all database reads and rights.
+ */
 export default class SettingsProvider {
 	public client: ReactionClient;
 
@@ -25,12 +30,16 @@ export default class SettingsProvider {
 	public GuildModel: Model<Guild>;
 	public ReactionModel: Model<Reaction>;
 
+	/**
+	 *
+	 * @param {ReactionClient} client - The extended AkairoClient
+	 */
 	public constructor(client: ReactionClient) {
 		/* our cient model */
 		this.client = client;
 
 		/* our document collections */
-		this.guild = new Collection()
+		this.guild = new Collection();
 		this.reaction = new Collection();
 
 		/* our models */
@@ -38,11 +47,15 @@ export default class SettingsProvider {
 		this.ReactionModel = ReactionModel;
 	}
 
-	/* creates new model with provided data */
+	/**
+	 *
+	 * @param {Types} type - The keyname for the subject document
+	 * @param data
+	 */
 	public async new(type: Types, data: object): Promise<ModelTypes> {
 		const model = MODELS[type];
 		const doc = new model(data);
-		this[type].set(doc.id, doc as any);
+		this[type].set(doc.id, doc);
 		await doc.save();
 		this.client.logger.verbose(`[DATABASE] Made new ${model.modelName} document with ID of ${doc._id}.`);
 		return doc;
@@ -51,14 +64,14 @@ export default class SettingsProvider {
 	/* setting options of an existing document */
 	public async set(type: Types, data: object, key: object): Promise<ModelTypes | null> {
 		const model = MODELS[type];
-		const doc = await model.findOneAndUpdate(data, { $set: key }, { 'new': true });
+		const doc = await model.findOneAndUpdate(data, { $set: key }, { new: true });
 		if (!doc) return null;
 		this.client.logger.verbose(`[DATABASE] Edited ${model.modelName} document with ID of ${doc._id}.`);
-		this[type].set(doc.id, doc as any);
+		this[type].set(doc.id, doc);
 		return doc;
 	}
 
-	/* removes a document with the provider query */ //
+	/* removes a document with the provider query */
 	public async remove(type: Types, data: any): Promise<ModelTypes | null> {
 		const model = MODELS[type];
 		const doc = await model.findOneAndDelete(data);
@@ -79,9 +92,8 @@ export default class SettingsProvider {
 		const collection = this[type];
 		const items = await model.find();
 		for (const i of items) collection.set(i.id, i);
-		return i += items.length;
+		return (i += items.length);
 	}
-
 
 	/* connecting */
 	private async _connect(url: string | undefined): Promise<Logger | number> {

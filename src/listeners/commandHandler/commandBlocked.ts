@@ -6,7 +6,7 @@ export default class CommandBlockedListener extends Listener {
 		super('commandBlocked', {
 			event: 'commandBlocked',
 			emitter: 'commandHandler',
-			category: 'commandHandler'
+			category: 'commandHandler',
 		});
 	}
 
@@ -19,13 +19,17 @@ export default class CommandBlockedListener extends Listener {
 			dm: 'This command must be ran in DMs.',
 		} as { [key: string]: string };
 
-		const location = msg.guild ? msg.guild.name : msg.author!.tag;
+		const location = msg.guild ? msg.guild.name : msg.author.tag;
 		this.client.logger.info(`[COMMANDS BLOCKED] ${command.id} with reason ${reason} in ${location}`);
 
 		const res = text[reason];
-		if (!res) return; 
+		if (!res) return;
 
-		if (msg.guild && msg.channel instanceof TextChannel && msg.channel!.permissionsFor(this.client.user!)!.has('SEND_MESSAGES')) {
+		if (
+			msg.guild &&
+			msg.channel instanceof TextChannel &&
+			msg.channel.permissionsFor(this.client.user!)!.has('SEND_MESSAGES')
+		) {
 			return msg.util!.reply(res);
 		}
 	}

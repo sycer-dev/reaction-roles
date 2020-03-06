@@ -7,16 +7,15 @@ export default class PingCommand extends Command {
 			aliases: ['ping', 'latency', 'test'],
 			clientPermissions: ['SEND_MESSAGES'],
 			description: {
-				content: 'Checks the bot\'s ping to Discord.'
+				content: "Checks the bot's ping to Discord.",
 			},
-			category: 'Utilities'
+			category: 'Utilities',
 		});
 	}
 
-	public async exec(msg: Message): Promise<Message | Message[]> {
-		const message = await msg.util!.send('Ping?') as Message;
+	public async exec(msg: Message): Promise<Message | Message[] | void> {
+		const message = (await msg.util?.send('Ping?')) as Message;
 		const ping = Math.round(message.createdTimestamp - msg.createdTimestamp);
 		return message.edit(`Pong! \`${ping}ms\``);
 	}
 }
-

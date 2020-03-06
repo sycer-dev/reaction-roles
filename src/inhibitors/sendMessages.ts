@@ -4,7 +4,7 @@ import { Message, TextChannel } from 'discord.js';
 export default class SendMessagesInhibtor extends Inhibitor {
 	public constructor() {
 		super('sendMessages', {
-			reason: 'sendMessages'
+			reason: 'sendMessages',
 		});
 	}
 

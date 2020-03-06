@@ -1,7 +1,6 @@
 import { Command } from 'discord-akairo';
 import { Message } from 'discord.js';
 import { inspect } from 'util';
-import { stripIndents } from 'common-tags';
 
 export default class EvalCommand extends Command {
 	public constructor() {
@@ -13,17 +12,17 @@ export default class EvalCommand extends Command {
 					id: 'code',
 					match: 'content',
 					prompt: {
-						start: 'what code would you like to evaluate?'
-					}
-				}
+						start: 'what code would you like to evaluate?',
+					},
+				},
 			],
 			clientPermissions: ['SEND_MESSAGES'],
 			description: 'Evaluate JavaScript code.',
-			ownerOnly: true
+			ownerOnly: true,
 		});
 	}
 
-	public async exec(msg: Message, { code }: { code: string }): Promise<Message | Message[]> {
+	public async exec(msg: Message, { code }: { code: string }): Promise<Message | Message[] | void> {
 		let evaled;
 		const start = Date.now();
 		let type;
@@ -33,16 +32,11 @@ export default class EvalCommand extends Command {
 			type = typeof evaled;
 			if (typeof evaled === 'object') {
 				evaled = inspect(evaled, {
-					depth: 0
+					depth: 0,
 				});
 			}
 		} catch (err) {
-			return msg.util!.send([
-				'An error occured!',
-				'```js',
-				`${err}`,
-				'```'
-           ]);
+			return msg.util?.send(['An error occured!', '```js', `${err}`, '```']);
 		}
 		const end = Date.now();
 		if (!evaled) {
@@ -51,7 +45,7 @@ export default class EvalCommand extends Command {
 		if (evaled.length > 1500) {
 			evaled = 'Response too long.';
 		}
-		return msg.util!.send([
+		return msg.util?.send([
 			'**Output**:',
 			'```js',
 			`${evaled}`,
@@ -60,7 +54,7 @@ export default class EvalCommand extends Command {
 			'```js',
 			`${type}`,
 			'```',
-			`⏱ ${end - start}ms`
+			`⏱ ${end - start}ms`,
 		]);
 	}
 }

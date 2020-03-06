@@ -15,24 +15,27 @@ export interface Reaction extends Document {
 	active: boolean;
 }
 
-const Reaction: Schema = new Schema({
-	guildID: String,
-	messageID: String,
-	channelID: String,
-	userID: String,
-	id: String,
-	emoji: String,
-	emojiType: String,
-	roleID: String,
-	uses: Number,
-	expiresAt: Date,
-	type: Number,
-	active: {
-		type: Boolean,
-		default: true
-	}
-}, {
-	strict: false
-});
+const Reaction: Schema = new Schema(
+	{
+		guildID: String,
+		messageID: String,
+		channelID: String,
+		userID: String,
+		id: String,
+		emoji: String,
+		emojiType: String,
+		roleID: String,
+		uses: Number,
+		expiresAt: Date,
+		type: Number,
+		active: {
+			type: Boolean,
+			default: true,
+		},
+	},
+	{
+		strict: false,
+	},
+);
 
 export default model<Reaction>('Reaction', Reaction);

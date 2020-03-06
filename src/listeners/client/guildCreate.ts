@@ -7,14 +7,14 @@ export default class GuildCreateListener extends Listener {
 		super('guildCreate', {
 			emitter: 'client',
 			event: 'guildCreate',
-			category: 'client'
+			category: 'client',
 		});
 	}
 
 	public async exec(guild: Guild): Promise<void> {
-		const existing = this.client.settings!.guild.get(guild.id);
+		const existing = this.client.settings.guild.get(guild.id);
 		if (!existing) {
-			this.client.settings!.new('guild', {
+			this.client.settings.new('guild', {
 				id: guild.id,
 				premium: false,
 				prefix: process.env.PREFIX || 'r!',
@@ -24,10 +24,10 @@ export default class GuildCreateListener extends Listener {
 		const client = new WebhookClient(process.env.SERVERLOGID!, process.env.SERVERLOGTOKEN!);
 		try {
 			const owner = await this.client.users.fetch(guild.ownerID);
-			const embed = this.client.util.embed()
+			const embed = this.client.util
+				.embed()
 				.setColor(this.client.config.color)
-				.setAuthor(guild.name, guild.iconURL() || this.client.user!.displayAvatarURL())
-				.setDescription(stripIndents`
+				.setAuthor(guild.name, guild.iconURL() || this.client.user!.displayAvatarURL()).setDescription(stripIndents`
 					**ID**: \`[${guild.id}]\`
 					**Owner**: ${owner.tag} \`[${owner.id}]\`
 					**Member Count**: ${guild.memberCount}
