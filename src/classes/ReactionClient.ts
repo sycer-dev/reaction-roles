@@ -1,5 +1,5 @@
 import { AkairoClient, CommandHandler, InhibitorHandler, ListenerHandler } from 'discord-akairo';
-import { ColorResolvable, Message, Constants, Intents } from 'discord.js';
+import { ColorResolvable, Message, Constants } from 'discord.js';
 import { join } from 'path';
 import { Logger } from 'winston';
 import { logger } from '../util/logger';
@@ -29,15 +29,15 @@ export default class ReactionClient extends AkairoClient {
 			messageSweepInterval: 900,
 			ownerID: config.owners,
 			partials: [Constants.PartialTypes.REACTION],
-			ws: {
-				intents: [
-					Intents.FLAGS.GUILDS,
-					Intents.FLAGS.GUILD_MEMBERS,
-					Intents.FLAGS.GUILD_MESSAGES,
-					Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
-					Intents.FLAGS.DIRECT_MESSAGES,
-				],
-			},
+			// ws: {
+			// 	intents: [
+			// 		Intents.FLAGS.GUILDS,
+			// 		Intents.FLAGS.GUILD_MEMBERS,
+			// 		Intents.FLAGS.GUILD_MESSAGES,
+			// 		Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+			// 		Intents.FLAGS.DIRECT_MESSAGES,
+			// 	],
+			// },
 		});
 
 		this.config = config;
