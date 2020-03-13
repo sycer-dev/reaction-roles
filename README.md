@@ -11,5 +11,5 @@ You can join our support server with [this link](https://fyko.net/discord/)!
 3. Make new branch! - `git checkout -b name-me`
 4. Commit! - `git commit -am 'I did something!'`
 5. Push it! - `git push origin name-me`
-6. [Pull it](https://github.com/Fyk0/hourly-animals/compare)!
+6. [Pull it](https://github.com/Fyk0/reaction-roles/compare)!
 7. Shake it!
