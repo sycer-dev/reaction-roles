@@ -1,5 +1,5 @@
 import { Listener } from 'discord-akairo';
-import { ActivityType } from 'discord.js';
+import { ActivityType, Guild } from 'discord.js';
 
 export interface ReactionStatus {
 	text: string;
@@ -16,7 +16,7 @@ export default class ReadyListener extends Listener {
 	}
 
 	public async exec(): Promise<void> {
-		this.client.logger.info(`[READY] ${this.client.user!.tag} is ready to cook 'sm shit.`);
+		this.client.logger.info(`[READY] ${this.client.user?.tag} is ready.`);
 
 		const activities: ReactionStatus[] = [
 			{
@@ -24,7 +24,7 @@ export default class ReadyListener extends Listener {
 				type: 'WATCHING',
 			},
 			{
-				text: 'https://discord.sycer.dev/ 🔗',
+				text: 'https://sycer.dev/ 🔗',
 				type: 'WATCHING',
 			},
 			{
@@ -34,7 +34,7 @@ export default class ReadyListener extends Listener {
 				type: 'PLAYING',
 			},
 			{
-				text: `${this.client.guilds.cache.size} Guilds 🛡`,
+				text: `${this.client.guilds.cache.size.toLocaleString('en-US')} Guilds 🛡`,
 				type: 'WATCHING',
 			},
 		];
@@ -46,11 +46,16 @@ export default class ReadyListener extends Listener {
 			this.client.user!.setActivity(status.value.text, { type: status.value.type });
 		}, 300000);
 
-		setInterval(async () => {
-			for (const g2 of this.client.guilds.cache.values()) {
-				g2.presences.cache.clear();
-			}
-		}, 900);
+		setInterval(() => this._clearPresences(), 9e5);
+	}
+
+	private _clearPresences(): void {
+		const i = this.client.guilds.cache.reduce((acc: number, g: Guild): number => {
+			acc += g.presences.cache.size;
+			g.presences.cache.clear();
+			return acc;
+		}, 0);
+		this.client.emit('debug', `[PRESNCES]: Cleared ${i} presneces in ${this.client.guilds.cache.size} guilds.`);
 	}
 
 	public *infinite(arr: ReactionStatus[]) {

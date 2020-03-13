@@ -1,9 +1,9 @@
 # Reaction Roles 💼
 Reaction Roles is a Discord bot that creates reaction-based role assignment.  
 
-You can invite the bot to your server with [this link](https://discordapp.com/oauth2/authorize?client_id=602976862280482857&permissions=268782656&scope=bot)!
+You can invite the bot to your server with [this link](https://fyko.net/bot?id=602976862280482857&p=268782656)!
 
-You can join our support server with [this link](https://discord.sycer.dev/)!
+You can join our support server with [this link](https://fyko.net/discord/)!
 
 ## Contributing
 1. [Fork](https://github.com/sycer-dev/reaction-roles/fork)!

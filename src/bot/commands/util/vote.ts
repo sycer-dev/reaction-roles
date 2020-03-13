@@ -13,7 +13,7 @@ export default class VoteCommand extends Command {
 		});
 	}
 
-	public async exec(msg: Message): Promise<Message | Message[]> {
-		return msg.util!.reply('Soon™.');
+	public async exec(msg: Message): Promise<Message | Message[] | void> {
+		return msg.util?.reply('Soon™.');
 	}
 }

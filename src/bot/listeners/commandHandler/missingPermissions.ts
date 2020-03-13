@@ -14,7 +14,7 @@ export default class MissingPermissionsListener extends Listener {
 		});
 	}
 
-	public async exec(msg: Message, _: Command, type: any, missing: any): Promise<Message | Message[] | void> {
+	public exec(msg: Message, _: Command, type: any, missing: any): void | Promise<Message | void> {
 		if (Object.keys(missing).includes(missing)) return msg.util!.reply(MISSING[missing]);
 
 		let text;

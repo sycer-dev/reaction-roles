@@ -1,6 +1,6 @@
-import { Command } from 'discord-akairo';
-import { Message, TextChannel, Role, MessageReaction, User } from 'discord.js';
 import { stripIndents } from 'common-tags';
+import { Command } from 'discord-akairo';
+import { Message, MessageReaction, Permissions, Role, TextChannel, User } from 'discord.js';
 import * as nodemoji from 'node-emoji';
 
 export default class AddReactionCommand extends Command {
@@ -18,8 +18,12 @@ export default class AddReactionCommand extends Command {
 					'3 roles 602918902141288489 :apple: Apples',
 				],
 			},
-			userPermissions: ['MANAGE_ROLES'],
-			clientPermissions: ['ADD_REACTIONS', 'MANAGE_ROLES', 'MANAGE_MESSAGES'],
+			userPermissions: [Permissions.FLAGS.MANAGE_ROLES],
+			clientPermissions: [
+				Permissions.FLAGS.ADD_REACTIONS,
+				Permissions.FLAGS.MANAGE_ROLES,
+				Permissions.FLAGS.MANAGE_MESSAGES,
+			],
 		});
 	}
 
@@ -54,15 +58,13 @@ export default class AddReactionCommand extends Command {
 
 		const message = yield {
 			type: async (_: Message, str: string): Promise<null | Message> => {
-				if (!str) return null;
-				try {
-					const m = (await channel.messages.fetch(str)) as Message;
-					if (!m) return null;
-					return m;
-				} catch (err) {
-					this.client.logger.error(`[ERR IN MESSAGE on NEW]: ${err}`);
-					return null;
+				if (str) {
+					try {
+						const m = await channel.messages.fetch(str);
+						if (m) return m;
+					} catch {}
 				}
+				return null;
 			},
 			prompt: {
 				start: 'What is the ID of the message you want to add that reaction role to?',
@@ -82,13 +84,13 @@ export default class AddReactionCommand extends Command {
 				}
 
 				const message = await m.channel.send(
-					"Please **react** to **this** message or respond with the emoji you wish to use?\nIf it's a custom emoji, please ensure I'm in the server that it's from!",
+					stripIndents`Please **react** to **this** message or respond with the emoji you wish to use?
+					If it's a custom emoji, please ensure I'm in the server that it's from!`,
 				);
 
 				const collector = await message.awaitReactions((_: MessageReaction, u: User): boolean => m.author.id === u.id, {
 					max: 1,
 				});
-
 				if (!collector || collector.size !== 1) return null;
 
 				const collected = collector.first()!;
@@ -98,7 +100,6 @@ export default class AddReactionCommand extends Command {
 					if (emoji) return emoji.id;
 					return null;
 				}
-				if (collected.emoji.name) return collected.emoji.name;
 
 				return null;
 			},
@@ -131,20 +132,16 @@ export default class AddReactionCommand extends Command {
 			emoji,
 			role,
 		}: { type: number; channel: TextChannel; message: Message; emoji: string; role: Role },
-	): Promise<Message | Message[]> {
-		if (!channel.permissionsFor(this.client.user!.id)!.has('ADD_REACTIONS'))
-			return msg.util!.reply(`I\'m missing the permissions to react in ${channel}!`);
+	): Promise<Message | Message[] | void> {
+		if (!channel.permissionsFor(this.client.user!.id)!.has(Permissions.FLAGS.ADD_REACTIONS))
+			return msg.util?.reply(`I'm missing the permissions to react in ${channel}!`);
 
-		try {
-			await message.react(emoji);
-		} catch (err) {
-			this.client.logger.error(`[NEW RR ERROR]: ${err}`);
-			return msg.util!.reply(`an error occurred when trying to react to that message: \`${err}\`.`);
-		}
+		const reaction = await message.react(emoji).catch((err: Error) => err);
+
+		if (reaction instanceof Error)
+			return msg.util?.reply(`an error occurred when trying to react to that message: \`${reaction}\`.`);
 
 		const id = this.makeID();
-
-		const emojiType = this.client.emojis.cache.has(emoji) ? 'custom' : 'unicode';
 
 		await this.client.settings.new('reaction', {
 			guildID: msg.guild!.id,
@@ -153,7 +150,7 @@ export default class AddReactionCommand extends Command {
 			channelID: channel.id,
 			id,
 			emoji,
-			emojiType,
+			emojiType: emoji.length >= 3 ? 'custom' : 'unicode',
 			roleID: role.id,
 			uses: 0,
 			type,
@@ -164,18 +161,18 @@ export default class AddReactionCommand extends Command {
 			.setColor(this.client.config.color)
 			.setTitle('New Reaction Role!')
 			.setDescription("Please make sure my highest role is above the one you're trying to assign!")
-			.addField('🔢 Reference ID', `${id}`)
+			.addField('🔢 Reference ID', id)
 			.addField('🏠 Channel', `${channel} \`[${channel.id}]\``)
-			.addField('💬 Message', `\([jump](${message.url})\)`)
-			.addField('🍕 Emoji', this.client.emojis.cache.get(emoji) || emoji)
+			.addField('💬 Message', `\`${message.id}\``)
+			.addField('🍕 Emoji', emoji.length >= 3 ? `${emoji} \`[${emoji}]\`` : emoji)
 			.addField('💼 Role', `${role} \`[${role.id}]\``);
-		return msg.util!.send({ embed });
+		return msg.util?.send({ embed });
 	}
 
-	public makeID(): string {
+	public makeID(times?: number): string {
 		const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-		return 'x'
-			.repeat(12)
+		return 'X'
+			.repeat(times || 4)
 			.split('')
 			.map(() => possible.charAt(Math.floor(Math.random() * possible.length)))
 			.join('');

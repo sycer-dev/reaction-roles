@@ -14,8 +14,8 @@ export default class CommandBlockedListener extends Listener {
 		if (reason === 'sendMessages') return;
 
 		const text = {
-			owner: 'You must be the owner to use this command.',
-			guild: 'You must be in a guild to use this command.',
+			owner: 'you must be the owner to use this command.',
+			guild: 'you must be in a guild to use this command.',
 			dm: 'This command must be ran in DMs.',
 		} as { [key: string]: string };
 

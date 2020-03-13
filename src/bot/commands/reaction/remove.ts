@@ -32,7 +32,7 @@ export default class RemoveCommand extends Command {
 		});
 	}
 
-	public async exec(msg: Message, { reaction }: { reaction: Reaction }): Promise<Message | Message[]> {
+	public async exec(msg: Message, { reaction }: { reaction: Reaction }): Promise<Message | Message[] | void> {
 		this.client.logger.info(reaction);
 		try {
 			const chan = this.client.channels.cache.get(reaction.channelID) as TextChannel;
@@ -52,6 +52,6 @@ export default class RemoveCommand extends Command {
 			},
 		);
 
-		return msg.util!.reply('successfully deleted that reaction role.');
+		return msg.util?.reply('successfully deleted that reaction role.');
 	}
 }

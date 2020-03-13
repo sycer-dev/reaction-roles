@@ -1,6 +1,7 @@
 import { Command } from 'discord-akairo';
 import { Message } from 'discord.js';
 import { stripIndents } from 'common-tags';
+import { PrefixSupplier } from 'discord-akairo';
 
 export default class InfoCommand extends Command {
 	public constructor() {
@@ -15,7 +16,7 @@ export default class InfoCommand extends Command {
 	}
 
 	public async exec(msg: Message): Promise<Message | Message[]> {
-		const prefix = msg.guild ? this.client.settings.guild.get(msg.guild.id)!.prefix : 'r!';
+		const prefix = (this.handler.prefix as PrefixSupplier)(msg);
 		const embed = this.client.util
 			.embed()
 			.setColor(this.client.config.color)

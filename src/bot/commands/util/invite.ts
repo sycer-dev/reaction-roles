@@ -14,13 +14,13 @@ export default class InviteCommand extends Command {
 		});
 	}
 
-	public async exec(msg: Message): Promise<Message | Message[]> {
+	public async exec(msg: Message): Promise<Message | Message[] | void> {
 		const embed = this.client.util.embed().setColor(this.client.config.color).setDescription(stripIndents`
 				You can invite **${this.client.user!.username}** to your server with [\`this\`](${await this.client.generateInvite(
 			268782656,
 		)}) link!
 				You can join our **Support Server** by clicking [\`this link\`](https://discord.sycer.dev/)!
 			`);
-		return msg.util!.send({ embed });
+		return msg.util?.send({ embed });
 	}
 }
