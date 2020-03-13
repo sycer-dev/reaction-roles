@@ -1,46 +1,65 @@
 {
-	"name": "sms",
-	"version": "0.0.1",
-	"description": "A Discord bot for reaction-based role assignment.",
-	"main": "dist/reaction.js",
-	"author": "Carter Himmel <sycerdev@gmail.com>",
-	"contributors": [
-		"iCrawl",
-		"1Computer1"
-	],
-	"license": "Apache 2.0",
-	"scripts": {
-		"build": "gulp",
-		"test": "eslint src --ext .ts",
-		"start": "node ."
-	},
-	"dependencies": {
-		"common-tags": "^1.8.0",
-		"discord-akairo": "github:discord-akairo/discord-akairo",
-		"discord.js": "github:discordjs/discord.js",
-		"moment": "^2.24.0",
-		"moment-duration-format": "^2.3.2",
-		"mongoose": "^5.7.4",
-		"node-emoji": "^1.10.0",
-		"node-superfetch": "^0.1.9",
-		"winston": "^3.2.1"
-	},
-	"devDependencies": {
-		"@types/common-tags": "^1.8.0",
-		"@types/dotenv": "^6.1.1",
-		"@types/moment-duration-format": "^2.2.2",
-		"@types/mongoose": "^5.5.20",
-		"@types/node": "^12.7.12",
-		"@types/node-emoji": "^1.8.1",
-		"@types/ws": "^6.0.3",
-		"@typescript-eslint/eslint-plugin": "^1.13.0",
-		"@typescript-eslint/parser": "^1.13.0",
-		"dotenv": "^8.1.0",
-		"fs-nextra": "^0.4.5",
-		"gulp": "^4.0.2",
-		"gulp-sourcemaps": "^2.6.5",
-		"gulp-typescript": "^5.0.1",
-		"merge2": "^1.3.0",
-		"typescript": "^3.6.4"
-	}
+    "name": "reaction-roles",
+    "version": "1.2.0",
+    "description": "A Discord bot for reaction-based role assignment.",
+    "main": "dist/index.js",
+    "author": "Carter Himmel <fyko@sycer.dev>",
+    "license": "Apache 2.0",
+    "scripts": {
+        "build": "pnpm run cleardir && pnpm run compile",
+        "cleardir": "rimraf dist/*",
+        "compile": "tsc",
+        "lint": "eslint src --ext .ts",
+        "lint:fix": "eslint src --fix --ext .ts",
+        "pre-commit": "pnpm run lint && pnpm run build",
+        "start": "pnpm run build && node ."
+    },
+    "dependencies": {
+        "common-tags": "^1.8.0",
+        "discord-akairo": "github:discord-akairo/discord-akairo",
+        "discord.js": "github:discordjs/discord.js",
+        "moment": "^2.24.0",
+        "moment-duration-format": "^2.3.2",
+        "mongoose": "^5.9.4",
+        "node-emoji": "^1.10.0",
+        "node-fetch": "^2.6.0",
+        "winston": "^3.2.1"
+    },
+    "devDependencies": {
+        "@types/common-tags": "^1.8.0",
+        "@types/dotenv": "^6.1.1",
+        "@types/moment-duration-format": "^2.2.2",
+        "@types/mongoose": "^5.7.6",
+        "@types/node": "^12.12.30",
+        "@types/node-emoji": "^1.8.1",
+        "@types/node-fetch": "^2.5.5",
+        "@types/ws": "^6.0.4",
+        "@typescript-eslint/eslint-plugin": "^2.23.0",
+        "@typescript-eslint/parser": "^2.23.0",
+        "dotenv": "^8.2.0",
+        "eslint": "^6.8.0",
+        "eslint-config-marine": "^6.0.0",
+        "eslint-config-prettier": "^6.10.0",
+        "eslint-plugin-prettier": "^3.1.2",
+        "prettier": "^1.19.1",
+        "rimraf": "^3.0.2",
+        "tslib": "^1.11.1",
+        "typescript": "^3.8.3",
+        "winston": "^3.2.1"
+    },
+    "optionalDependencies": {
+        "bufferutil": "^4.0.1",
+        "erlpack": "github:discordapp/erlpack",
+        "utf-8-validate": "^5.0.2",
+        "zlib-sync": "^0.1.6"
+    },
+    "eslintConfig": {
+        "extends": "marine/prettier/node",
+        "rules": {
+            "comma-dangle": [
+                "error",
+                "always-multiline"
+            ]
+        }
+    }
 }
