@@ -1,7 +1,6 @@
-import { Command } from 'discord-akairo';
-import { Message } from 'discord.js';
 import { stripIndents } from 'common-tags';
-import { PrefixSupplier } from 'discord-akairo';
+import { Command, PrefixSupplier } from 'discord-akairo';
+import { Message } from 'discord.js';
 
 export default class InfoCommand extends Command {
 	public constructor() {

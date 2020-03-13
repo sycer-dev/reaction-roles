@@ -1,6 +1,6 @@
-import { Command } from 'discord-akairo';
-import { Message, PermissionResolvable } from 'discord.js';
 import { stripIndents } from 'common-tags';
+import { Command, PrefixSupplier } from 'discord-akairo';
+import { Message } from 'discord.js';
 
 export default class HelpCommand extends Command {
 	public constructor() {
@@ -28,7 +28,7 @@ export default class HelpCommand extends Command {
 	}
 
 	public async exec(msg: Message, { command }: { command: Command | null }): Promise<Message | Message[]> {
-		const prefix = msg.guild ? this.client.settings.guild.get(msg.guild.id)!.prefix || 'r!' : 'r!';
+		const prefix = (this.handler.prefix as PrefixSupplier)(msg);
 		if (!command) {
 			const embed = this.client.util
 				.embed()
@@ -42,12 +42,12 @@ export default class HelpCommand extends Command {
 			for (const category of this.handler.categories.values()) {
 				if (category.id === 'owner') continue;
 				embed.addField(
-					`\`💼\` ${category.id}`,
+					`💼 ${category.id}`,
 					`${category
 						.filter(cmd => cmd.aliases.length > 0)
 						.map(
 							cmd =>
-								`\`${cmd.aliases[0]}\`${
+								`${prefix}\`${cmd.aliases[0]}\`${
 									cmd.description && cmd.description.content
 										? ` - ${cmd.description.content.split('\n')[0].substring(0, 120)}`
 										: ''
@@ -73,28 +73,10 @@ export default class HelpCommand extends Command {
 		if (command.description.examples && command.description.examples.length)
 			embed.addField(
 				'» Examples',
-				`\`${command.aliases[0]} ${command.description.examples
+				`\`${prefix}${command.aliases[0]} ${command.description.examples
 					.map((e: string): string => `${this.client.config.prefix}${e}`)
 					.join('\n')}\``,
 			);
-		if (command.userPermissions) {
-			const permissions = command.userPermissions as Array<PermissionResolvable>;
-			embed.addField(
-				'» Required Permissions',
-				permissions
-					.map((i: PermissionResolvable): string => {
-						const str = i.toString();
-						if (str === 'VIEW_CHANNEL') return '`Read Messages`';
-						if (str === 'SEND_TTS_MESSAGES') return '`Send TTS Messages`';
-						if (str === 'USE_VAD') return '`Use VAD`';
-						return `\`${str
-							.replace(/_/g, ' ')
-							.toLowerCase()
-							.replace(/\b(\w)/g, (char: string): string => char.toUpperCase())}\``;
-					})
-					.join(', '),
-			);
-		}
 		return msg.util!.send({ embed });
 	}
 }
