@@ -62,7 +62,7 @@ export default class SettingsProvider {
 				cache: this.guilds,
 			},
 			{
-				key: 'reactio ',
+				key: 'reaction',
 				model: this.ReactionModel,
 				cache: this.reactions,
 			},
