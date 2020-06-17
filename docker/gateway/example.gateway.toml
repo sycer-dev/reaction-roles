@@ -1,0 +1,23 @@
+token = ""
+events = [
+	"READY",
+	"GUILD_CREATE",
+	"GUILD_UPDATE",
+	"GUILD_DELETE",
+	"MESSAGE_CREATE"
+]
+
+intents = [
+	"GUILDS",
+	"GUILD_MESSAGES"
+]
+
+[broker]
+type = "amqp"
+
+[amqp]
+url = "amqp://fyko:doctordoctor@rabbit//"
+
+[prometheus]
+address = ":4500"
+endpoint = "/metrics"
