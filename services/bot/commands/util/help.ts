@@ -30,12 +30,13 @@ export default class extends Command {
 			// if they provided a valid category and commands were found
 			if (modules.size) {
 				const name = modules.first()!.category.replace(/(\b\w)/gi, lc => lc.toUpperCase());
-				const embed = this.client.util.embed()
+				const embed = this.client.util
+					.embed()
 					.setColor(Number(process.env.COLOR!))
 					.setTitle(name).setDescription(stripIndents`
 						This is a list of all commands within the \`${name}\` category.
 						For more info on a command, type \`${prefix}help <command>\`
-					`)
+					`);
 				const data = modules.map(m => `\`${prefix}${m.aliases[0]}\` - ${m.meta.description}`).join('\n');
 				embed.addField('Commands', data);
 
@@ -54,22 +55,27 @@ export default class extends Command {
 				if (command.meta.examples && command.meta.examples.length)
 					embed.addField(
 						'Examples',
-						`\`${prefix}${command.aliases[0]} ${command.meta.examples.map(e => `${prefix}${command.aliases[0]}${e}`).join('\n')}\``,
+						`\`${prefix}${command.aliases[0]} ${command.meta.examples
+							.map(e => `${prefix}${command.aliases[0]}${e}`)
+							.join('\n')}\``,
 					);
 
 				return void this.client.util.sendMessage(msg.channel_id, { embed });
 			}
 
-			return void this.client.util.sendMessage(msg.channel_id, { content: `Invalid category name or command alias '${mod.substring(0, 16)}' provided.` });
+			return void this.client.util.sendMessage(msg.channel_id, {
+				content: `Invalid category name or command alias '${mod.substring(0, 16)}' provided.`,
+			});
 		}
 		// if no argument is provided at all
-		const embed = this.client.util.embed()
+		const embed = this.client.util
+			.embed()
 			.setColor(Number(process.env.COLOR!))
 			.setTitle(`Commands (${_mods.size})`).setDescription(stripIndents`
 				This is a list of the available categories and commands.
 				For more info on category or command, run \`${prefix}help <category/command>\`
 			`);
-		const categories = groupBy(this.client.commandHandler.modules, (c) => c.category);
+		const categories = groupBy(this.client.commandHandler.modules, c => c.category);
 		for (const [name, cmds] of categories) {
 			const commands = cmds
 				.filter(c => c.aliases.length > 0)
@@ -77,7 +83,7 @@ export default class extends Command {
 				.join(', ');
 			embed.addField(`${name.replace(/(\b\w)/gi, lc => lc.toUpperCase())} (${cmds.size})`, commands);
 		}
-		
+
 		return void this.client.util.sendMessage(msg.channel_id, { embed });
 	}
 }

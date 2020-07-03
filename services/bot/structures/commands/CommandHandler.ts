@@ -8,6 +8,7 @@ export type CommandConstructor<T> = new (...args: ConstructorParameters<typeof C
 export default class CommandHandler extends Handler<Command> {
 	public readonly prefix = 'rr!';
 
+	// TODO: permissions check
 	public async handle(msg: APIMessageData): Promise<void> {
 		const lexer = new Lexure.Lexer(msg.content).setQuotes([
 			['"', '"'],

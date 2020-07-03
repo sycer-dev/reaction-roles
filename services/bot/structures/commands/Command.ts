@@ -6,6 +6,7 @@ export type PermissionsPredicate = (msg: APIMessageData) => boolean;
 
 export type CommandPermissions = (keyof typeof Permissions.FLAGS | number)[] | PermissionsPredicate;
 
+// TODO: add support for dm only or guild only commands 
 export interface CommandOptions {
 	aliases: string[];
 	category: string;

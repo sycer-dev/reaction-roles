@@ -1,10 +1,12 @@
 FROM node:12-alpine
 
-WORKDIR /usr/src/reactionroles-next/bot
+WORKDIR /usr/src/reactionroles-next/api
 
-COPY services/bot/. .
+COPY services/api/. .
 
 ENV PNPM_VERSION=5.1.4
+
+EXPOSE 4000
 
 RUN apk add --update \
 && apk add ca-certificates \
@@ -13,9 +15,6 @@ RUN apk add --update \
 && pnpm config set store-dir ~/.pnpm-store \
 && pnpm install --frozen-lockfile \
 && apk del .build-deps
-
-
-ENV DISCORD_TOKEN= 
 
 RUN pnpm run build
 

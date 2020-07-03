@@ -1,6 +1,5 @@
 version: "2.1"
 
-
 services:
   gateway:
     build: docker/gateway
@@ -14,17 +13,21 @@ services:
         condition: service_healthy
 
   rabbit:
-    image: rabbitmq
+    image: rabbitmq:management
     restart: unless-stopped
     environment:
       - RABBITMQ_DEFAULT_USER=fyko
       - RABBITMQ_DEFAULT_PASS=doctordoctor
     healthcheck:
-      test: ["CMD", "rabbitmqctl", "node_health_check"]
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
       interval: 10s
       timeout: 5s
+    ports: 
+      - 15672:15672
+      - 5672:5672
     expose: 
       - "15672" # management panel
+      - "5672" # main port
 
   redis:
     image: redis:5-alpine
@@ -53,5 +56,45 @@ services:
       redis:
         condition: service_healthy
 
+  api:
+    build:
+      context: .
+      dockerfile: docker/services/api/Dockerfile
+    restart: unless-stopped
+    env_file:
+      - docker/services/api/.env
+    ports: 
+      - 4000:4000
+    expose:
+      - 4000
+    # depends_on: 
+    #   postgres:
+    #     condition: service_healthy
+
+  postgres:
+    image: postgres:13-alpine
+    restart: unless-stopped
+    volumes:
+    - pg_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: fyko 
+      POSTGRES_PASSWORD: doctordoctor
+      POSTGRES_DB: reactionroles
+    # healthcheck:
+    #   test: /usr/bin/pg_isready
+    #   interval: 5s
+    #   timeout: 10s
+    #   retries: 120
+
+  # reactions:
+  #   build:
+  #     context: .
+  #     dockerfile: docker/services/workers/reactions/Dockerfile
+  #   restart: unless-stopped
+  #   env_file:
+  #     - docker/services/workers/reactions/.env
+    
+
 volumes:
   redis_data:
+  pg_data:

@@ -1,6 +1,6 @@
 import { deepClone } from '@klasa/utils';
 
-import type {
+import {
 	APIEmbedAuthorData,
 	APIEmbedData,
 	APIEmbedFieldData,
@@ -8,7 +8,7 @@ import type {
 	APIEmbedImageData,
 	APIEmbedProviderData,
 	APIEmbedVideoData,
-	EmbedType
+	EmbedType,
 } from '@klasa/dapi-types';
 
 export interface StringResolvable {
@@ -118,7 +118,7 @@ export class Embed implements APIEmbedData {
 			// eslint-disable-next-line @typescript-eslint/camelcase
 			proxy_url: data.thumbnail.proxy_url,
 			height: data.thumbnail.height,
-			width: data.thumbnail.width
+			width: data.thumbnail.width,
 		} : undefined;
 
 		this.image = data.image ? {
@@ -126,13 +126,13 @@ export class Embed implements APIEmbedData {
 			// eslint-disable-next-line @typescript-eslint/camelcase
 			proxy_url: data.image.proxy_url,
 			height: data.image.height,
-			width: data.image.width
+			width: data.image.width,
 		} : undefined;
 
 		this.video = data.video ? {
 			url: data.video.url,
 			height: data.video.height,
-			width: data.video.width
+			width: data.video.width,
 		} : undefined;
 
 		this.author = data.author ? {
@@ -141,7 +141,7 @@ export class Embed implements APIEmbedData {
 			// eslint-disable-next-line @typescript-eslint/camelcase
 			icon_url: data.author.icon_url,
 			// eslint-disable-next-line @typescript-eslint/camelcase
-			proxy_icon_url: data.author.proxy_icon_url
+			proxy_icon_url: data.author.proxy_icon_url,
 		} : undefined;
 
 		this.provider = data.provider;
@@ -151,7 +151,7 @@ export class Embed implements APIEmbedData {
 			// eslint-disable-next-line @typescript-eslint/camelcase
 			icon_url: data.footer.icon_url,
 			// eslint-disable-next-line @typescript-eslint/camelcase
-			proxy_icon_url: data.footer.proxy_icon_url
+			proxy_icon_url: data.footer.proxy_icon_url,
 		} : undefined;
 	}
 

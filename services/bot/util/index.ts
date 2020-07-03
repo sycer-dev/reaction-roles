@@ -1,6 +1,9 @@
 import Collection from '@discordjs/collection';
 
-export const groupBy = <K, V, G>(collection: Collection<K, V>, fn: (param: V) => G): Collection<G, Collection<K, V>> => {
+export const groupBy = <K, V, G>(
+	collection: Collection<K, V>,
+	fn: (param: V) => G,
+): Collection<G, Collection<K, V>> => {
 	const collector: Collection<G, Collection<K, V>> = new Collection();
 	for (const [key, val] of collection) {
 		const group = fn(val);
