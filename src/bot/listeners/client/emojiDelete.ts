@@ -1,5 +1,7 @@
 import { Listener } from 'discord-akairo';
 import { GuildEmoji } from 'discord.js';
+import { In } from 'typeorm';
+import { EmojiType, Reaction } from '../../../database';
 
 export default class EmojiDeleteListener extends Listener {
 	public constructor() {
@@ -10,11 +12,13 @@ export default class EmojiDeleteListener extends Listener {
 		});
 	}
 
-	public exec(emoji: GuildEmoji): void {
-		const existing = this.client.settings.cache.reactions.filter(r => r.emoji === emoji.id && r.emojiType === 'custom');
-		if (!existing.size) return;
-		for (const c of existing.values()) {
-			this.client.settings.set('reaction', { id: c.id }, { active: false });
+	public async exec(emoji: GuildEmoji): Promise<void> {
+		const rows = await Reaction.find({ emojiType: EmojiType.CUSTOM, emoji: emoji.id });
+		if (rows.length) {
+			Reaction.createQueryBuilder()
+				.update()
+				.set({ active: false })
+				.where({ id: In(rows.map(r => r.id)) });
 		}
 	}
 }

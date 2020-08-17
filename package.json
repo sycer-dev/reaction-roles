@@ -1,6 +1,6 @@
 {
     "name": "reaction-roles",
-    "version": "1.2.0",
+    "version": "2.0.0",
     "description": "A Discord bot for reaction-based role assignment.",
     "main": "dist/index.js",
     "author": "Carter Himmel <fyko@sycer.dev>",
@@ -18,16 +18,20 @@
         "common-tags": "^1.8.0",
         "discord-akairo": "^8.1.0",
         "discord.js": "^12.3.1",
+        "ioredis": "^4.17.3",
         "moment": "^2.27.0",
         "moment-duration-format": "^2.3.2",
         "mongoose": "^5.10.0",
         "node-emoji": "^1.10.0",
         "node-fetch": "^2.6.0",
+        "pg": "^8.3.0",
+        "typeorm": "^0.2.25",
         "winston": "^3.3.3"
     },
     "devDependencies": {
         "@types/common-tags": "^1.8.0",
         "@types/dotenv": "^6.1.1",
+        "@types/ioredis": "^4.17.3",
         "@types/moment-duration-format": "^2.2.2",
         "@types/mongoose": "^5.7.36",
         "@types/node": "^12.12.54",

@@ -1,5 +1,7 @@
 import { Listener } from 'discord-akairo';
 import { GuildChannel } from 'discord.js';
+import { In } from 'typeorm';
+import { Reaction } from '../../../database';
 
 export default class ChannelDeleteListener extends Listener {
 	public constructor() {
@@ -10,12 +12,14 @@ export default class ChannelDeleteListener extends Listener {
 		});
 	}
 
-	public exec(channel: GuildChannel): void {
+	public async exec(channel: GuildChannel): Promise<void> {
 		if (!channel.guild) return;
-		const existing = this.client.settings.cache.reactions.filter(r => r.channelID === channel.id);
-		if (!existing.size) return;
-		for (const c of existing.values()) {
-			this.client.settings.set('reaction', { id: c.id }, { active: false });
+		const rows = await Reaction.find({ channelID: channel.id });
+		if (rows.length) {
+			Reaction.createQueryBuilder()
+				.update()
+				.set({ active: false })
+				.where({ id: In(rows.map(r => r.id)) });
 		}
 	}
 }

@@ -1,0 +1,19 @@
+{
+    "name": "default",
+    "type": "postgres",
+    "host": "localhost",
+    "port": 5432,
+    "username": "fyko",
+    "password": "doctordoctor",
+    "database": "reaction_roles",
+    "synchronize": true,
+    "logging": true,
+    "entities": [
+        "dist/database/entities/*.*"
+    ],
+    "cache": {
+        "type": "ioredis",
+        "options": "redis://localhost:6379/",
+        "duration": 600000
+    }
+}

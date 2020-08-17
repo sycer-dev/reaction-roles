@@ -12,8 +12,7 @@ RUN apk add --update \
 && apk add --no-cache ca-certificates \
 && apk add --no-cache --virtual .build-deps git curl build-base python g++ make \
 && curl -L https://unpkg.com/@pnpm/self-installer | node \
-&& pnpm i \
-&& apk del .build-deps
+&& pnpm i 
 
 COPY . .
 

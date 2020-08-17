@@ -4,13 +4,16 @@ import { join } from 'path';
 import { Logger } from 'winston';
 import { SettingsProvider } from '../../database';
 import { logger } from '../util/logger';
+import Redis from 'ioredis';
 
 declare module 'discord-akairo' {
 	interface AkairoClient {
 		logger: Logger;
 		commandHandler: CommandHandler;
+		listenerHandler: ListenerHandler;
 		config: ReactionConfig;
 		settings: SettingsProvider;
+		redis: Redis.Redis;
 	}
 }
 
@@ -47,8 +50,8 @@ export default class ReactionClient extends AkairoClient {
 		directory: join(__dirname, '..', 'commands'),
 		prefix: async (msg: Message): Promise<string> => {
 			if (msg.guild) {
-				const doc = this.settings.cache.guilds.get(msg.guild.id);
-				if (doc?.prefix) return doc.prefix;
+				const row = await this.settings.guild(msg.guild.id);
+				if (row?.prefix) return row.prefix;
 			}
 			return this.config.prefix;
 		},
@@ -84,6 +87,8 @@ export default class ReactionClient extends AkairoClient {
 	});
 
 	public settings: SettingsProvider = new SettingsProvider(this);
+
+	public readonly redis: Redis.Redis = new Redis(process.env.REDIS_URL);
 
 	private async load(): Promise<this> {
 		await this.settings.init();

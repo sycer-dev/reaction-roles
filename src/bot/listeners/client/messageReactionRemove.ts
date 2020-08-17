@@ -1,10 +1,9 @@
-import { Listener } from 'discord-akairo';
-import { User, MessageReaction, Permissions } from 'discord.js';
 import { stripIndents } from 'common-tags';
+import { Listener } from 'discord-akairo';
+import { MessageReaction, Permissions, User } from 'discord.js';
+import { Reaction } from '../../../database';
 
 export default class MessageReactionRemove extends Listener {
-	public queue: Set<string> = new Set();
-
 	public constructor() {
 		super('messageReactionRemove', {
 			emitter: 'client',
@@ -24,8 +23,8 @@ export default class MessageReactionRemove extends Listener {
 		if (!msg.guild.me || msg.guild.me.partial) await msg.guild.members.fetch(this.client.user?.id!);
 
 		// get all of our message reactions with the message ID of our message. If none, return.
-		const messages = this.client.settings.cache.reactions.filter(r => r.messageID === msg.id);
-		if (!messages || !messages.size) return;
+		const messages = await Reaction.find({ messageID: msg.id });
+		if (!messages.length) return;
 
 		const rr = messages.find(r => [reaction.emoji.name, reaction.emoji.id].includes(r.emoji));
 		if (!rr || !rr.active) return;

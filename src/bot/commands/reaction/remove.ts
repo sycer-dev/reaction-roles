@@ -1,6 +1,6 @@
 import { Command } from 'discord-akairo';
 import { Message, TextChannel } from 'discord.js';
-import { Reaction } from '../../../database/models/Reaction';
+import { Reaction } from '../../../database';
 
 export default class RemoveCommand extends Command {
 	public constructor() {
@@ -16,10 +16,9 @@ export default class RemoveCommand extends Command {
 			args: [
 				{
 					id: 'reaction',
-					type: (msg: Message, str: string): Reaction | null => {
-						const req = this.client.settings.cache.reactions.find(r => r.id === str && r.guildID === msg.guild!.id);
-						if (!req) return null;
-						return req;
+					type: async (msg: Message, str: string): Promise<Reaction | null> => {
+						const row = await Reaction.findOne({ id: parseInt(str, 10), guildID: msg.guild!.id, active: true });
+						return row ?? null;
 					},
 					match: 'rest',
 					prompt: {
@@ -44,13 +43,8 @@ export default class RemoveCommand extends Command {
 			this.client.logger.error(`[ERROR in REMOVE CMD]: ${err}.`);
 		}
 
-		this.client.settings.set(
-			'reaction',
-			{ messageID: reaction.messageID },
-			{
-				active: false,
-			},
-		);
+		reaction.active = false;
+		await reaction.save();
 
 		return msg.util?.reply('successfully deleted that reaction role.');
 	}

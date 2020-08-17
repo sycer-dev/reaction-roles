@@ -1,5 +1,7 @@
 import { Listener } from 'discord-akairo';
 import { Message } from 'discord.js';
+import { In } from 'typeorm';
+import { Reaction } from '../../../database';
 
 export default class MessageDeleteListener extends Listener {
 	public constructor() {
@@ -10,11 +12,13 @@ export default class MessageDeleteListener extends Listener {
 		});
 	}
 
-	public exec(msg: Message): void {
-		const existing = this.client.settings.cache.reactions.filter(r => r.messageID === msg.id);
-		if (!existing.size) return;
-		for (const c of existing.values()) {
-			this.client.settings.set('reaction', { id: c.id }, { active: false });
+	public async exec(msg: Message): Promise<void> {
+		const rows = await Reaction.find({ messageID: msg.id });
+		if (rows.length) {
+			Reaction.createQueryBuilder()
+				.update()
+				.set({ active: false })
+				.where({ id: In(rows.map(r => r.id)) });
 		}
 	}
 }

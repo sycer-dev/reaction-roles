@@ -1,5 +1,6 @@
-import Guild from './models/Guild';
-import Reaction from './models/Reaction';
+import Guild from './entities/Guild';
+import Reaction, { EmojiType } from './entities/Reaction';
 import SettingsProvider from './structures/SettingsProvider';
 
-export { SettingsProvider, Guild, Reaction };
+export default SettingsProvider;
+export { SettingsProvider, EmojiType, Guild, Reaction };

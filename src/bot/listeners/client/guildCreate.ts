@@ -10,14 +10,7 @@ export default class GuildCreateListener extends Listener {
 		});
 	}
 
-	public async exec(guild: Guild): Promise<void> {
-		const existing = this.client.settings.cache.guilds.get(guild.id);
-		if (!existing) {
-			this.client.settings.new('guild', {
-				id: guild.id,
-				premium: false,
-				prefix: process.env.PREFIX || 'r!',
-			});
-		}
+	public exec(guild: Guild): void {
+		void this.client.settings.guild(guild.id);
 	}
 }

@@ -2,6 +2,7 @@ import { stripIndents } from 'common-tags';
 import { Command } from 'discord-akairo';
 import { Message, MessageReaction, Permissions, Role, TextChannel, User } from 'discord.js';
 import * as nodemoji from 'node-emoji';
+import { EmojiType, Reaction } from '../../../database';
 
 export default class AddReactionCommand extends Command {
 	public constructor() {
@@ -11,11 +12,11 @@ export default class AddReactionCommand extends Command {
 			category: 'Reaction Roles',
 			description: {
 				content: 'Creates a new reaction role.',
-				usage: '<type> <channel> <message id> <emoji> <role>',
+				usage: '<channel> <message id> <emoji> <role>',
 				examples: [
-					'1 #reaction-roles 603009228180815882 🍕 Member',
-					'2 welcome 603009471236538389 :blobbouce: Blob',
-					'3 roles 602918902141288489 :apple: Apples',
+					'#reaction-roles 603009228180815882 🍕 Member',
+					'welcome 603009471236538389 :blobbouce: Blob',
+					'roles 602918902141288489 :apple: Apples',
 				],
 			},
 			userPermissions: [Permissions.FLAGS.MANAGE_ROLES],
@@ -28,26 +29,6 @@ export default class AddReactionCommand extends Command {
 	}
 
 	public *args(m: Message): object {
-		const type = yield {
-			type: 'number',
-			prompt: {
-				start: stripIndents`
-					What type of reaction role do you wish to create?
-
-					\`[1]\` for react to add and remove. *Classic*
-					~~\`[2]\` for react to add only.
-					\`[3]\` for react to delete only.~~
-				`,
-				restart: stripIndents`
-				Please provide a valid number for which type of reaction role do you wish to create?
-
-				\`[1]\` Both react to add and remove. *Classic*
-				~~\`[2]\` Only react to add.
-				\`[3]\` Only react to remove role.~~
-			`,
-			},
-		};
-
 		const channel = yield {
 			type: 'textChannel',
 			prompt: {
@@ -120,18 +101,12 @@ export default class AddReactionCommand extends Command {
 			},
 		};
 
-		return { type, channel, message, emoji, role };
+		return { channel, message, emoji, role };
 	}
 
 	public async exec(
 		msg: Message,
-		{
-			type,
-			channel,
-			message,
-			emoji,
-			role,
-		}: { type: number; channel: TextChannel; message: Message; emoji: string; role: Role },
+		{ channel, message, emoji, role }: { channel: TextChannel; message: Message; emoji: string; role: Role },
 	): Promise<Message | Message[] | void> {
 		if (!channel.permissionsFor(this.client.user!.id)!.has(Permissions.FLAGS.ADD_REACTIONS))
 			return msg.util?.reply(`I'm missing the permissions to react in ${channel}!`);
@@ -141,40 +116,27 @@ export default class AddReactionCommand extends Command {
 		if (reaction instanceof Error)
 			return msg.util?.reply(`an error occurred when trying to react to that message: \`${reaction}\`.`);
 
-		const id = this.makeID();
-
-		await this.client.settings.new('reaction', {
+		const row = await Reaction.create({
+			channelID: channel.id,
+			creatorID: msg.author.id,
 			guildID: msg.guild!.id,
 			messageID: message.id,
-			userID: msg.author.id,
-			channelID: channel.id,
-			id,
-			emoji,
-			emojiType: emoji.length >= 3 ? 'custom' : 'unicode',
 			roleID: role.id,
-			uses: 0,
-			type,
-		});
+
+			emoji,
+			emojiType: emoji.length >= 3 ? EmojiType.CUSTOM : EmojiType.UNICODE,
+		}).save();
 
 		const embed = this.client.util
 			.embed()
 			.setColor(this.client.config.color)
 			.setTitle('New Reaction Role!')
 			.setDescription("Please make sure my highest role is above the one you're trying to assign!")
-			.addField('🔢 Reference ID', id)
+			.addField('🔢 Reference ID', row.id)
 			.addField('🏠 Channel', `${channel} \`[${channel.id}]\``)
 			.addField('💬 Message', `\`${message.id}\``)
 			.addField('🍕 Emoji', emoji.length >= 3 ? `${emoji} \`[${emoji}]\`` : emoji)
 			.addField('💼 Role', `${role} \`[${role.id}]\``);
 		return msg.util?.send({ embed });
-	}
-
-	public makeID(times?: number): string {
-		const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-		return 'X'
-			.repeat(times || 4)
-			.split('')
-			.map(() => possible.charAt(Math.floor(Math.random() * possible.length)))
-			.join('');
 	}
 }
