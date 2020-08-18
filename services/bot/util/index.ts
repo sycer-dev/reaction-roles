@@ -13,3 +13,7 @@ export const groupBy = <K, V, G>(
 	}
 	return collector;
 };
+
+export function hexToDecimal(input: string): number {
+	return parseInt(input.replace('#', ''), 16);
+}

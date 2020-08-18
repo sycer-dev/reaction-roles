@@ -5,7 +5,9 @@ dependencies:
   '@spectacles/brokers': 0.8.0
   '@spectacles/rest': 0.8.3
   '@spectacles/util': 0.3.2
-  apollo-boost: 0.4.9_graphql@15.1.0
+  apollo-cache-inmemory: 1.6.6_graphql@15.1.0
+  apollo-client: 2.6.10_graphql@15.1.0
+  apollo-link-http: 1.5.17_graphql@15.1.0
   common-tags: 1.8.0
   fs-nextra: 0.5.1
   graphql: 15.1.0
@@ -136,8 +138,13 @@ packages:
     resolution:
       integrity: sha512-0fRfA90FWm6KJfw6P9QGyo0HDTCmthZ7cWaBQndITlaWLTZ6njRyKwrwpzpg+n6kBXBIGKeUHEQuBx7bphGJkA==
   /@types/node/13.13.12:
+    dev: true
     resolution:
       integrity: sha512-zWz/8NEPxoXNT9YyF2osqyA9WjssZukYpgI4UYZpOjcyqwIUqWGkcCionaEb9Ki+FULyPyvNFpg/329Kd2/pbw==
+  /@types/node/13.13.15:
+    dev: false
+    resolution:
+      integrity: sha512-kwbcs0jySLxzLsa2nWUAGOd/s21WU1jebrEdtzhsj1D4Yps1EOuyI1Qcu+FD56dL7NRNIJtDDjcqIG22NwkgLw==
   /@types/zen-observable/0.8.0:
     dev: false
     resolution:
@@ -219,7 +226,7 @@ packages:
       integrity: sha512-OMAr+nJWKdlVM9LOqCqh3pQQPwxHAN7Du8DR6dmwCrAmxtiXQnhHJ6tBNtf+cggqfo51SG/FCwnKhXCIM7hnVg==
   /@wry/context/0.4.4:
     dependencies:
-      '@types/node': 13.13.12
+      '@types/node': 13.13.15
       tslib: 1.13.0
     dev: false
     resolution:
@@ -304,23 +311,6 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-9VGjrMsG1vePxcSweQsN20KY/c4zN0h9fLjqAbwbPfahM3t+NL+M9HC8xeXG2I8pX5NoamTGNuomEUFI7fcUjA==
-  /apollo-boost/0.4.9_graphql@15.1.0:
-    dependencies:
-      apollo-cache: 1.3.5_graphql@15.1.0
-      apollo-cache-inmemory: 1.6.6_graphql@15.1.0
-      apollo-client: 2.6.10_graphql@15.1.0
-      apollo-link: 1.2.14_graphql@15.1.0
-      apollo-link-error: 1.1.13_graphql@15.1.0
-      apollo-link-http: 1.5.17_graphql@15.1.0
-      graphql: 15.1.0
-      graphql-tag: 2.10.3_graphql@15.1.0
-      ts-invariant: 0.4.4
-      tslib: 1.13.0
-    dev: false
-    peerDependencies:
-      graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
-    resolution:
-      integrity: sha512-05y5BKcDaa8w47f8d81UVwKqrAjn8uKLv6QM9fNdldoNzQ+rnOHgFlnrySUZRz9QIT3vPftQkEz2UEASp1Mi5g==
   /apollo-cache-inmemory/1.6.6_graphql@15.1.0:
     dependencies:
       apollo-cache: 1.3.5_graphql@15.1.0
@@ -360,16 +350,6 @@ packages:
       graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
     resolution:
       integrity: sha512-jiPlMTN6/5CjZpJOkGeUV0mb4zxx33uXWdj/xQCfAMkuNAC3HN7CvYDyMHHEzmcQ5GV12LszWoQ/VlxET24CtA==
-  /apollo-link-error/1.1.13_graphql@15.1.0:
-    dependencies:
-      apollo-link: 1.2.14_graphql@15.1.0
-      apollo-link-http-common: 0.2.16_graphql@15.1.0
-      tslib: 1.13.0
-    dev: false
-    peerDependencies:
-      graphql: '*'
-    resolution:
-      integrity: sha512-jAZOOahJU6bwSqb2ZyskEK1XdgUY9nkmeclCrW7Gddh1uasHVqmoYc4CKdb0/H0Y1J9lvaXKle2Wsw/Zx1AyUg==
   /apollo-link-http-common/0.2.16_graphql@15.1.0:
     dependencies:
       apollo-link: 1.2.14_graphql@15.1.0
@@ -1784,7 +1764,9 @@ specifiers:
   '@types/node-emoji': ^1.8.1
   '@typescript-eslint/eslint-plugin': ^2.34.0
   '@typescript-eslint/parser': ^2.34.0
-  apollo-boost: ^0.4.9
+  apollo-cache-inmemory: ^1.6.6
+  apollo-client: ^2.6.10
+  apollo-link-http: ^1.5.17
   common-tags: ^1.8.0
   eslint: ^6.8.0
   eslint-config-marine: ^6.0.0

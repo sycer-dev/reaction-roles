@@ -3,6 +3,7 @@ import { Amqp } from '@spectacles/brokers';
 import Rest, { RedisMutex } from '@spectacles/rest';
 import { join } from 'path';
 import { WebSocketEvents } from '../../util/constants';
+import { hexToDecimal } from '../../util';
 import { logger } from '../../util/logger';
 import { redis } from '../../util/redis';
 import CommandHandler from '../commands/CommandHandler';
@@ -14,6 +15,11 @@ export default class Client {
 	 * the RabbitMQ broker
 	 */
 	public readonly broker = new Amqp('gateway');
+
+	/**
+	 * The command color
+	 */
+	public readonly color = hexToDecimal(process.env.COLOR!);
 
 	/**
 	 * the command handler

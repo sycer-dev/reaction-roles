@@ -1,4 +1,6 @@
-import { ApolloClient, ApolloClientOptions } from 'apollo-boost';
+import { ApolloClient } from 'apollo-client';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import { HttpLink } from 'apollo-link-http';
 import gql from 'graphql-tag';
 
 interface CreateInput {
@@ -10,13 +12,13 @@ interface CreateInput {
 	created_by: string;
 }
 
-interface CreatedRRResponse {
-	id: string;
-}
-
 export const gqlClient = new ApolloClient({
-	// @ts-ignore
-	uri: 'http://api:4000',
+	cache: new InMemoryCache(),
+	link: new HttpLink({
+		uri: process.env.GRAPHQL_URI,
+		// @ts-ignore
+		fetch,
+	}),
 });
 
 export async function createReactionRole(opts: CreateInput) {
@@ -37,8 +39,8 @@ export async function createReactionRole(opts: CreateInput) {
 
 	const { data } = await gqlClient.mutate({
 		mutation,
-		variables: { ... opts}
+		variables: { ...opts },
 	});
-	
+
 	return data.create.id;
 }

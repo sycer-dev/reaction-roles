@@ -32,7 +32,7 @@ export default class extends Command {
 				const name = modules.first()!.category.replace(/(\b\w)/gi, lc => lc.toUpperCase());
 				const embed = this.client.util
 					.embed()
-					.setColor(Number(process.env.COLOR!))
+					.setColor(this.client.color)
 					.setTitle(name).setDescription(stripIndents`
 						This is a list of all commands within the \`${name}\` category.
 						For more info on a command, type \`${prefix}help <command>\`
@@ -70,7 +70,7 @@ export default class extends Command {
 		// if no argument is provided at all
 		const embed = this.client.util
 			.embed()
-			.setColor(Number(process.env.COLOR!))
+			.setColor(this.client.color)
 			.setTitle(`Commands (${_mods.size})`).setDescription(stripIndents`
 				This is a list of the available categories and commands.
 				For more info on category or command, run \`${prefix}help <category/command>\`
